@@ -30,34 +30,32 @@ namespace RoboPhredDev.PotionCraft.Pantry
             PantryIngredientRegistry.Initialize();
 
             this.ApplyPatches();
+
+
+            // Delay ingredient load until the ingredients we base ours on have loaded.
+            RecipeMapObjectAwakeEvent.OnRecipeMapObjectAwake += (sender, args) => LoadCustomIngredients();
         }
 
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.F1))
             {
-                TestPackage();
+                UnlockEverything();
             }
         }
 
-        private void TestPackage()
+        private void LoadCustomIngredients()
         {
-            Managers.Player.inventory.Clear();
-
-            Debug.Log("Testing yml load");
-            try
+            var packages = PantryPackageLoader.LoadAllPackages();
+            Debug.Log($"Loaded {packages.Count} packages");
+            foreach (var pkg in packages)
             {
-                var pkg = PantryPackage.Load("Test");
-
+                Debug.Log($"Found {pkg.Ingredients.Count} ingredients in {pkg.Name}");
                 foreach (var pkgIngredient in pkg.Ingredients)
                 {
                     var ingredient = PantryIngredientRegistry.RegisterIngredient(pkgIngredient);
-                    Managers.Player.inventory.AddItem(ingredient, 5000, true, true);
+                    // Managers.Player.inventory.AddItem(ingredient, 5000, true, true);
                 }
-            }
-            catch (Exception ex)
-            {
-                Debug.Log($"Failed: {ex.GetType().FullName} {ex.Message} {ex.StackTrace}");
             }
         }
 
@@ -72,24 +70,25 @@ namespace RoboPhredDev.PotionCraft.Pantry
                 {
                     continue;
                 }
+                Debug.Log($"Adding {ingredient.name}");
                 Managers.Player.inventory.AddItem(ingredient, 5000, true, true);
             }
 
-            foreach (var salt in Salt.allSalts)
-            {
-                Managers.Player.inventory.AddItem(salt, 5000, true, true);
-            }
+            // foreach (var salt in Salt.allSalts)
+            // {
+            //     Managers.Player.inventory.AddItem(salt, 5000, true, true);
+            // }
 
-            var potionBaseSubManager = Managers.RecipeMap.potionBaseSubManager;
-            foreach (var potionBase in Managers.RecipeMap.potionBasesSettings.potionBases)
-            {
-                potionBaseSubManager.UnlockPotionBase(potionBase, false);
-            }
+            // var potionBaseSubManager = Managers.RecipeMap.potionBaseSubManager;
+            // foreach (var potionBase in Managers.RecipeMap.potionBasesSettings.potionBases)
+            // {
+            //     potionBaseSubManager.UnlockPotionBase(potionBase, false);
+            // }
 
-            foreach (var state in MapLoader.loadedMaps)
-            {
-                state.potionEffectsOnMap.ForEach(x => x.Status = PotionEffectStatus.Known);
-            }
+            // foreach (var state in MapLoader.loadedMaps)
+            // {
+            //     state.potionEffectsOnMap.ForEach(x => x.Status = PotionEffectStatus.Known);
+            // }
         }
 
         private void ApplyPatches()

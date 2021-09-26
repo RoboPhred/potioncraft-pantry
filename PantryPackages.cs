@@ -20,6 +20,7 @@ namespace RoboPhredDev.PotionCraft.Pantry
 
         private static PantryPackage TryLoadPackage(string folder)
         {
+            UnityEngine.Debug.Log($"[Pantry] Loading package {folder}");
             try
             {
                 return PantryPackage.Load(folder);
