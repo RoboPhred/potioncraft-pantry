@@ -5,8 +5,6 @@ using ObjectBased.UIElements.Tooltip;
 
 namespace RoboPhredDev.PotionCraft.Pantry
 {
-
-
     [HarmonyPatch(typeof(Ingredient), "GetTooltipContent")]
     static class IngredientGetTooltipContentPatch
     {
