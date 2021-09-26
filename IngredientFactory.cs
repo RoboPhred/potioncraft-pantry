@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using RoboPhredDev.PotionCraft.Pantry.PantryPackages;
 using UnityEngine;
-using Utils.BezierCurves;
 
 namespace RoboPhredDev.PotionCraft.Pantry
 {
@@ -19,6 +18,9 @@ namespace RoboPhredDev.PotionCraft.Pantry
 
             var newIngredient = ScriptableObject.CreateInstance<Ingredient>();
 
+            // TODO: Create our own name, and override the strings in GetTooltipContent
+            newIngredient.name = ingredientBase.name;
+
             // TODO: Load from yaml
 
             // Clone data from an existing ingredient to satisfy the game.
@@ -26,6 +28,8 @@ namespace RoboPhredDev.PotionCraft.Pantry
             newIngredient.itemStackPrefab = ingredientBase.itemStackPrefab;
             newIngredient.grindedSubstance = ingredientBase.grindedSubstance;
             newIngredient.grindedSubstanceColor = ingredientBase.grindedSubstanceColor;
+
+            // TODO: Not working?  Ingredient always at max length, doesnt allow grinding.
             newIngredient.grindStatusByLeafGrindingCurve = ingredientBase.grindStatusByLeafGrindingCurve;
             newIngredient.grindedSubstanceMaxAmount = ingredientBase.grindedSubstanceMaxAmount;
             newIngredient.physicalParticleType = ingredientBase.physicalParticleType;
@@ -42,18 +46,21 @@ namespace RoboPhredDev.PotionCraft.Pantry
             newIngredient.smallIcon = ingredientBase.smallIcon;
             newIngredient.recipeMarkIcon = ingredientBase.recipeMarkIcon;
 
-            // TODO: load path from yaml
+            // newIngredient.path = new IngredientPath
+            // {
+            //     path = new List<CubicBezierCurve> {
+            //             new CubicBezierCurve(new Vector2(0, 0), new Vector2(0, 0), new Vector2(10, 0), new Vector2(10, 0)),
+            //             new CubicBezierCurve(new Vector2(10, 0), new Vector2(10, 0), new Vector2(10, 10), new Vector2(10, 10)),
+            //             new CubicBezierCurve(new Vector2(10, 10), new Vector2(10, 20), new Vector2(-10, -20), new Vector2(-10, 10)),
+            //     }
+            // };
             newIngredient.path = new IngredientPath
             {
-                path = new List<CubicBezierCurve> {
-                        new CubicBezierCurve(new Vector2(0, 0), new Vector2(0, 0), new Vector2(10, 0), new Vector2(10, 0)),
-                        new CubicBezierCurve(new Vector2(10, 0), new Vector2(10, 0), new Vector2(10, 10), new Vector2(10, 10)),
-                        new CubicBezierCurve(new Vector2(10, 10), new Vector2(10, 20), new Vector2(-10, -20), new Vector2(-10, 10)),
-                }
+                path = PathParser.SvgPathToBezierCurves(pantryIngredient.Path)
             };
 
             newIngredient.canBeDamaged = ingredientBase.canBeDamaged;
-            newIngredient.isTeleportationIngredient = false; // is crystal?
+            newIngredient.isTeleportationIngredient = pantryIngredient.IsCrystal;
             newIngredient.soundPreset = ingredientBase.soundPreset;
 
             newIngredient.OnAwake();
