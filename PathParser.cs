@@ -1,7 +1,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Utils.BezierCurves;
 
@@ -11,66 +10,116 @@ namespace RoboPhredDev.PotionCraft.Pantry
     {
         public static List<CubicBezierCurve> SvgPathToBezierCurves(string path)
         {
-            // TODO: letter command should split as well
-            // FIXME: better svg parser.  This requires command letters to not be split.
-            var parts = path.Split(' ').Select(x => x.Trim()).Where(x => x.Length > 0).ToList();
             var curves = new List<CubicBezierCurve>();
             var lastEnd = Vector2.zero;
-            foreach (var part in parts)
+            CubicBezierCurve curve;
+            while ((curve = PartToCurve(ref path, lastEnd)) != null)
             {
-                var curve = PartToCurve(part, lastEnd);
-                curves.Add(curve);
                 lastEnd = curve.PLast;
+                curves.Add(curve);
             }
+            Debug.Log($"Loaded {curves.Count} curves from path {path}");
             return curves;
         }
 
-        private static CubicBezierCurve PartToCurve(string part, Vector2 start)
+        private static string GetToken(ref string svgPath)
         {
-            part = part.Trim();
-            // TODO: support relative moves
-            switch (part[0])
+            var token = "";
+            int i = 0;
+            bool? isAlphanumeric = null;
+            for (; i < svgPath.Length; i++)
             {
-                case 'M':
-                case 'L':
-                    return AbsoluteLine(part.Substring(1), start);
-                case 'H': return AbsoluteHorizontal(part.Substring(1), start);
-                case 'V': return AbsoluteVertical(part.Substring(1), start);
-                case 'C':
-                    return AbsoluteCubicCurve(part.Substring(1), start);
+                var c = svgPath[i];
+                if (c == ' ' || c == ',' || c == '\n' || c == '\r')
+                {
+                    if (token.Length > 0)
+                    {
+                        break;
+                    }
+                    continue;
+                }
+
+                if (!isAlphanumeric.HasValue)
+                {
+                    isAlphanumeric = char.IsLetter(c);
+                }
+                else if (char.IsLetter(c) != isAlphanumeric.Value)
+                {
+                    break;
+                }
+
+                token += c;
+            }
+
+            svgPath = svgPath.Substring(i);
+
+            Debug.Log($"Got Token: {token}.  Path is now {svgPath}");
+
+            if (token == "")
+            {
+                return null;
+            }
+
+            return token;
+        }
+
+        private static float GetFloatTokenOrFail(ref string svgPath)
+        {
+            var token = GetToken(ref svgPath);
+            if (!float.TryParse(token, out var result))
+            {
+                throw new Exception("Failed to parse float token: " + token);
+            }
+            return result;
+        }
+
+        private static CubicBezierCurve PartToCurve(ref string svgPath, Vector2 start)
+        {
+            var token = GetToken(ref svgPath);
+            if (token == null)
+            {
+                return null;
+            }
+            // TODO: support relative moves
+            switch (token)
+            {
+                case "M":
+                case "L":
+                    return AbsoluteLine(ref svgPath, start);
+                case "H": return AbsoluteHorizontal(ref svgPath, start);
+                case "V": return AbsoluteVertical(ref svgPath, start);
+                case "C":
+                    return AbsoluteCubicCurve(ref svgPath, start);
                 default:
-                    throw new Exception($"Unknown path command {part[0]}");
+                    throw new Exception($"Unknown path command {token}");
             }
         }
 
-        private static CubicBezierCurve AbsoluteLine(string part, Vector2 start)
+        private static CubicBezierCurve AbsoluteLine(ref string svgPath, Vector2 start)
         {
-            var values = part.Split(',', ' ');
-            var end = new Vector2(float.Parse(values[0]), float.Parse(values[1]));
+            var end = new Vector2(GetFloatTokenOrFail(ref svgPath), GetFloatTokenOrFail(ref svgPath));
             return new CubicBezierCurve(start, start, end, end);
         }
 
-        private static CubicBezierCurve AbsoluteHorizontal(string part, Vector2 start)
+        private static CubicBezierCurve AbsoluteHorizontal(ref string svgPath, Vector2 start)
         {
-            var end = new Vector2(float.Parse(part), start.y);
+            var end = new Vector2(GetFloatTokenOrFail(ref svgPath), start.y);
             return new CubicBezierCurve(start, start, end, end);
         }
 
-        private static CubicBezierCurve AbsoluteVertical(string part, Vector2 start)
+        private static CubicBezierCurve AbsoluteVertical(ref string svgPath, Vector2 start)
         {
-            var end = new Vector2(start.x, float.Parse(part));
+            var end = new Vector2(start.x, GetFloatTokenOrFail(ref svgPath));
             return new CubicBezierCurve(start, start, end, end);
         }
 
-        private static CubicBezierCurve AbsoluteCubicCurve(string part, Vector2 start)
+        private static CubicBezierCurve AbsoluteCubicCurve(ref string svgPath, Vector2 start)
         {
-            Debug.Log("AbsoluteCubicCurve " + part);
-            var values = part.Split(',', ' ');
             return new CubicBezierCurve(
                 start,
-                new Vector2(float.Parse(values[0]), float.Parse(values[1])),
-                new Vector2(float.Parse(values[2]), float.Parse(values[3])),
-                new Vector2(float.Parse(values[4]), float.Parse(values[5]))
+                new Vector2(GetFloatTokenOrFail(ref svgPath), GetFloatTokenOrFail(ref svgPath)),
+                new Vector2(GetFloatTokenOrFail(ref svgPath), GetFloatTokenOrFail(ref svgPath)),
+                new Vector2(GetFloatTokenOrFail(ref svgPath), GetFloatTokenOrFail(ref svgPath))
             );
         }
     }
