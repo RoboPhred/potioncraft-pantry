@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using ObjectBased.UIElements.Tooltip;
 using RoboPhredDev.PotionCraft.Pantry.PantryPackages;
 using UnityEngine;
 
@@ -19,9 +20,8 @@ namespace RoboPhredDev.PotionCraft.Pantry
             var newIngredient = ScriptableObject.CreateInstance<Ingredient>();
 
             // TODO: Create our own name, and override the strings in GetTooltipContent
-            newIngredient.name = ingredientBase.name;
-
-            // TODO: Load from yaml
+            // FIXME: Prefix name with package folder to avoid collisions.
+            newIngredient.name = pantryIngredient.Name;
 
             // Clone data from an existing ingredient to satisfy the game.
             newIngredient.inventoryIconObject = ingredientBase.inventoryIconObject;
@@ -46,23 +46,17 @@ namespace RoboPhredDev.PotionCraft.Pantry
             newIngredient.smallIcon = ingredientBase.smallIcon;
             newIngredient.recipeMarkIcon = ingredientBase.recipeMarkIcon;
 
-            // newIngredient.path = new IngredientPath
-            // {
-            //     path = new List<CubicBezierCurve> {
-            //             new CubicBezierCurve(new Vector2(0, 0), new Vector2(0, 0), new Vector2(10, 0), new Vector2(10, 0)),
-            //             new CubicBezierCurve(new Vector2(10, 0), new Vector2(10, 0), new Vector2(10, 10), new Vector2(10, 10)),
-            //             new CubicBezierCurve(new Vector2(10, 10), new Vector2(10, 20), new Vector2(-10, -20), new Vector2(-10, 10)),
-            //     }
-            // };
             newIngredient.path = new IngredientPath
             {
-                path = PathParser.SvgPathToBezierCurves(pantryIngredient.Path)
+                path = PathParser.SvgPathToBezierCurves(pantryIngredient.Path),
+                grindedPathStartsFrom = pantryIngredient.GrindStartPercent,
             };
 
             newIngredient.canBeDamaged = ingredientBase.canBeDamaged;
             newIngredient.isTeleportationIngredient = pantryIngredient.IsCrystal;
             newIngredient.soundPreset = ingredientBase.soundPreset;
 
+            // FIXME: Shouldn't unity call this automatically?  Maybe the issue is we are spawning immediately after creating it.  Might need to wait a few game ticks
             newIngredient.OnAwake();
 
             return newIngredient;

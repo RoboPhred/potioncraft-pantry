@@ -34,6 +34,8 @@ namespace RoboPhredDev.PotionCraft.Pantry
                 case 'M':
                 case 'L':
                     return AbsoluteLine(part.Substring(1), start);
+                case 'H': return AbsoluteHorizontal(part.Substring(1), start);
+                case 'V': return AbsoluteVertical(part.Substring(1), start);
                 case 'C':
                     return AbsoluteCubicCurve(part.Substring(1), start);
                 default:
@@ -45,6 +47,18 @@ namespace RoboPhredDev.PotionCraft.Pantry
         {
             var values = part.Split(',', ' ');
             var end = new Vector2(float.Parse(values[0]), float.Parse(values[1]));
+            return new CubicBezierCurve(start, start, end, end);
+        }
+
+        private static CubicBezierCurve AbsoluteHorizontal(string part, Vector2 start)
+        {
+            var end = new Vector2(float.Parse(part), start.y);
+            return new CubicBezierCurve(start, start, end, end);
+        }
+
+        private static CubicBezierCurve AbsoluteVertical(string part, Vector2 start)
+        {
+            var end = new Vector2(start.x, float.Parse(part));
             return new CubicBezierCurve(start, start, end, end);
         }
 
