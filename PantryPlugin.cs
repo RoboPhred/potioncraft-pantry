@@ -42,6 +42,31 @@ namespace RoboPhredDev.PotionCraft.Pantry
             {
                 UnlockEverything();
             }
+
+            if (Input.GetKeyDown(KeyCode.F2))
+            {
+                foreach (var ing in Managers.Ingredient.ingredients)
+                {
+                    Debug.Log($"Ingredient: {ing.name}");
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.F3))
+            {
+                foreach (var f in FactionSystem.Faction.allFactions)
+                {
+                    Debug.Log($"Faction: {f.name}");
+                    foreach (var c in f.factionClasses)
+                    {
+                        Debug.Log($" > Class: {c.name}");
+                        var quests = Reflection.GetPrivateField<List<FactionSystem.FactionClass.QuestInFactionClass>>(c.factionClass, "quests");
+                        foreach (var q in quests)
+                        {
+                            Debug.Log($" > > Quest: {q.name}");
+                        }
+                    }
+                }
+            }
         }
 
         private void LoadCustomIngredients()
@@ -53,8 +78,14 @@ namespace RoboPhredDev.PotionCraft.Pantry
                 Debug.Log($"Found {pkg.Ingredients.Count} ingredients in {pkg.Name}");
                 foreach (var pkgIngredient in pkg.Ingredients)
                 {
-                    var ingredient = PantryIngredientRegistry.RegisterIngredient(pkgIngredient);
-                    // Managers.Player.inventory.AddItem(ingredient, 5000, true, true);
+                    try
+                    {
+                        PantryIngredientRegistry.RegisterIngredient(pkgIngredient);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.Log($"[Pantry]: Failed to load ingredient {pkgIngredient.Name} from package {pkg.Name}: {ex.Message}\n{ex.StackTrace}\n\n");
+                    }
                 }
             }
         }
@@ -74,21 +105,21 @@ namespace RoboPhredDev.PotionCraft.Pantry
                 Managers.Player.inventory.AddItem(ingredient, 5000, true, true);
             }
 
-            // foreach (var salt in Salt.allSalts)
-            // {
-            //     Managers.Player.inventory.AddItem(salt, 5000, true, true);
-            // }
+            foreach (var salt in Salt.allSalts)
+            {
+                Managers.Player.inventory.AddItem(salt, 5000, true, true);
+            }
 
-            // var potionBaseSubManager = Managers.RecipeMap.potionBaseSubManager;
-            // foreach (var potionBase in Managers.RecipeMap.potionBasesSettings.potionBases)
-            // {
-            //     potionBaseSubManager.UnlockPotionBase(potionBase, false);
-            // }
+            var potionBaseSubManager = Managers.RecipeMap.potionBaseSubManager;
+            foreach (var potionBase in Managers.RecipeMap.potionBasesSettings.potionBases)
+            {
+                potionBaseSubManager.UnlockPotionBase(potionBase, false);
+            }
 
-            // foreach (var state in MapLoader.loadedMaps)
-            // {
-            //     state.potionEffectsOnMap.ForEach(x => x.Status = PotionEffectStatus.Known);
-            // }
+            foreach (var state in MapLoader.loadedMaps)
+            {
+                state.potionEffectsOnMap.ForEach(x => x.Status = PotionEffectStatus.Known);
+            }
         }
 
         private void ApplyPatches()

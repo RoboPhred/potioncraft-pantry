@@ -22,8 +22,11 @@
     <Reference Include="UnityEngine.CoreModule" CopyToPublishDirectory="Never">
       <HintPath>.\externals\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
-        <Reference Include="UnityEngine.InputLegacyModule" CopyToPublishDirectory="Never">
+    <Reference Include="UnityEngine.InputLegacyModule" CopyToPublishDirectory="Never">
       <HintPath>.\externals\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule" CopyToPublishDirectory="Never">
+      <HintPath>.\externals\UnityEngine.ImageConversionModule.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp" CopyToPublishDirectory="Never">
       <HintPath>.\externals\Assembly-CSharp.dll</HintPath>

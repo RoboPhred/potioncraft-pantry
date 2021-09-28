@@ -18,7 +18,6 @@ namespace RoboPhredDev.PotionCraft.Pantry
                 lastEnd = curve.PLast;
                 curves.Add(curve);
             }
-            Debug.Log($"Loaded {curves.Count} curves from path {path}");
             return curves;
         }
 
@@ -53,8 +52,6 @@ namespace RoboPhredDev.PotionCraft.Pantry
 
             svgPath = svgPath.Substring(i);
 
-            Debug.Log($"Got Token: {token}.  Path is now {svgPath}");
-
             if (token == "")
             {
                 return null;
@@ -66,7 +63,7 @@ namespace RoboPhredDev.PotionCraft.Pantry
         private static float GetFloatTokenOrFail(ref string svgPath)
         {
             var token = GetToken(ref svgPath);
-            if (!float.TryParse(token, out var result))
+            if (!float.TryParse(token, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var result))
             {
                 throw new Exception("Failed to parse float token: " + token);
             }

@@ -8,7 +8,7 @@ namespace RoboPhredDev.PotionCraft.Pantry
 
     static class PantryIngredientRegistry
     {
-        private static Dictionary<Ingredient, PantryIngredient> ingredientLookup = new();
+        private static readonly Dictionary<Ingredient, PantryIngredient> ingredientLookup = new();
 
         public static void Initialize()
         {

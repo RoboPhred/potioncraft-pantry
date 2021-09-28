@@ -1,4 +1,6 @@
 
+using YamlDotNet.Serialization;
+
 namespace RoboPhredDev.PotionCraft.Pantry.PantryPackages
 {
     class PantryIngredient
@@ -7,12 +9,17 @@ namespace RoboPhredDev.PotionCraft.Pantry.PantryPackages
 
         public string Description { get; set; }
 
-        public float GrindStartPercent { get; set; }
+        public string InventoryImage { get; set; }
 
         public string IngredientBase { get; set; }
+
+        public float GrindStartPercent { get; set; }
 
         public string Path { get; set; }
 
         public bool IsCrystal { get; set; }
+
+        [YamlIgnore]
+        public PantryPackage Package { get; set; }
     }
 }

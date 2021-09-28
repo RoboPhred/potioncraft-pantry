@@ -10,12 +10,25 @@ namespace RoboPhredDev.PotionCraft.Pantry.PantryPackages
         [YamlIgnore]
         public string Name { get; set; }
 
+        [YamlIgnore]
+        public string DirectoryPath { get; set; }
+
         public List<PantryIngredient> Ingredients { get; set; } = new List<PantryIngredient>();
 
-        public static PantryPackage Load(string fullPath)
+        private void Initialize()
         {
-            var pkg = Deserializer.Deserialize<PantryPackage>(System.IO.Path.Combine(fullPath, "package.yml"));
-            pkg.Name = System.IO.Path.GetDirectoryName(fullPath);
+            foreach (var ingredient in Ingredients)
+            {
+                ingredient.Package = this;
+            }
+        }
+
+        public static PantryPackage Load(string directoryPath)
+        {
+            var pkg = Deserializer.Deserialize<PantryPackage>(System.IO.Path.Combine(directoryPath, "package.yml"));
+            pkg.Name = System.IO.Path.GetDirectoryName(directoryPath);
+            pkg.DirectoryPath = directoryPath;
+            pkg.Initialize();
             return pkg;
         }
     }

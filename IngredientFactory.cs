@@ -1,7 +1,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using ObjectBased.UIElements.Tooltip;
 using RoboPhredDev.PotionCraft.Pantry.PantryPackages;
 using UnityEngine;
 
@@ -24,7 +23,15 @@ namespace RoboPhredDev.PotionCraft.Pantry
             newIngredient.name = pantryIngredient.Name;
 
             // Clone data from an existing ingredient to satisfy the game.
-            newIngredient.inventoryIconObject = ingredientBase.inventoryIconObject;
+            if (!string.IsNullOrEmpty(pantryIngredient.InventoryImage))
+            {
+                newIngredient.inventoryIconObject = SpriteLoader.LoadSpriteFromFile(System.IO.Path.Combine(pantryIngredient.Package.DirectoryPath, pantryIngredient.InventoryImage));
+            }
+            else
+            {
+                newIngredient.inventoryIconObject = ingredientBase.inventoryIconObject;
+            }
+
             newIngredient.itemStackPrefab = ingredientBase.itemStackPrefab;
             newIngredient.grindedSubstance = ingredientBase.grindedSubstance;
             newIngredient.grindedSubstanceColor = ingredientBase.grindedSubstanceColor;
@@ -43,6 +50,7 @@ namespace RoboPhredDev.PotionCraft.Pantry
             newIngredient.spotPlantPrefab = ingredientBase.spotPlantPrefab;
             // Disable spawning in garden
             newIngredient.spotPlantSpawnTypes = new List<GrowingSpotType>();
+
             newIngredient.smallIcon = ingredientBase.smallIcon;
             newIngredient.recipeMarkIcon = ingredientBase.recipeMarkIcon;
 
