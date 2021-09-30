@@ -20,17 +20,34 @@ namespace RoboPhredDev.PotionCraft.Pantry
 
             // TODO: Create our own name, and override the strings in GetTooltipContent
             // FIXME: Prefix name with package folder to avoid collisions.
-            newIngredient.name = pantryIngredient.Name;
+            newIngredient.name = pantryIngredient.QualifiedName;
 
             // Clone data from an existing ingredient to satisfy the game.
             if (!string.IsNullOrEmpty(pantryIngredient.InventoryImage))
             {
                 newIngredient.inventoryIconObject = SpriteLoader.LoadSpriteFromFile(System.IO.Path.Combine(pantryIngredient.Package.DirectoryPath, pantryIngredient.InventoryImage));
+
+                // TESTING
+                newIngredient.recipeMarkIcon = newIngredient.inventoryIconObject;
             }
             else
             {
                 newIngredient.inventoryIconObject = ingredientBase.inventoryIconObject;
+                newIngredient.recipeMarkIcon = ingredientBase.recipeMarkIcon;
             }
+
+            if (!string.IsNullOrEmpty(pantryIngredient.RecipeImage))
+            {
+                newIngredient.recipeMarkIcon = SpriteLoader.LoadSpriteFromFile(System.IO.Path.Combine(pantryIngredient.Package.DirectoryPath, pantryIngredient.RecipeImage));
+            }
+            else
+            {
+                newIngredient.recipeMarkIcon = ingredientBase.recipeMarkIcon;
+            }
+
+            // TODO: This seems to be for the small ingredients marker in the ingredients list of recipes,
+            // but its not working.  These seem to be built up by the InventoryAtlas, maybe at runtime, so maybe we need to regenerate that?
+            newIngredient.smallIcon = newIngredient.inventoryIconObject;
 
             newIngredient.itemStackPrefab = ingredientBase.itemStackPrefab;
             newIngredient.grindedSubstance = ingredientBase.grindedSubstance;
@@ -50,9 +67,6 @@ namespace RoboPhredDev.PotionCraft.Pantry
             newIngredient.spotPlantPrefab = ingredientBase.spotPlantPrefab;
             // Disable spawning in garden
             newIngredient.spotPlantSpawnTypes = new List<GrowingSpotType>();
-
-            newIngredient.smallIcon = ingredientBase.smallIcon;
-            newIngredient.recipeMarkIcon = ingredientBase.recipeMarkIcon;
 
             newIngredient.path = new IngredientPath
             {

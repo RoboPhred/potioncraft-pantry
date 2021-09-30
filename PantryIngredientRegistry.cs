@@ -22,7 +22,7 @@ namespace RoboPhredDev.PotionCraft.Pantry
                 e.Result = new TooltipContent
                 {
                     header = pantryIngredient.Name,
-                    path = pantryIngredient.Name,
+                    path = pantryIngredient.QualifiedName,
                     description1 = pantryIngredient.Description,
                 };
             };

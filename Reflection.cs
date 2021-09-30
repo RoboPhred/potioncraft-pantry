@@ -20,5 +20,11 @@ namespace RoboPhredDev.PotionCraft.Pantry
             var prop = typeof(TType).GetField(fieldName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
             return (TValue)prop.GetValue(null);
         }
+
+        public static object InvokePrivateMethod(object instance, string methodName, params object[] parameters)
+        {
+            var method = instance.GetType().GetMethod(methodName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            return method.Invoke(instance, parameters);
+        }
     }
 }
