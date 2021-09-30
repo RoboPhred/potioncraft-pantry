@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using RoboPhredDev.PotionCraft.Pantry.PantryPackages;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
-using YamlDotNet.Serialization.NodeDeserializers;
 
 namespace RoboPhredDev.PotionCraft.Pantry
 {
@@ -18,7 +18,7 @@ namespace RoboPhredDev.PotionCraft.Pantry
         /// </summary>
         public static readonly INamingConvention NamingConvention = CamelCaseNamingConvention.Instance;
 
-        private static readonly Stack<string> ParsingFiles = new Stack<string>();
+        private static readonly Stack<string> ParsingFiles = new();
 
         /// <summary>
         /// Gets the path of the current file being processed.
@@ -124,6 +124,7 @@ namespace RoboPhredDev.PotionCraft.Pantry
         {
             return new DeserializerBuilder()
                     .WithNamingConvention(NamingConvention)
+                    .WithTypeConverter(new PantryIngredientPathTypeConverter())
                     // .WithNodeTypeResolver(new ImportNodeTypeResolver(), s => s.OnTop())
                     // .WithNodeDeserializer(new ImportDeserializer(), s => s.OnTop())
                     // .WithNodeDeserializer(new DuckTypeDeserializer(), s => s.OnTop())

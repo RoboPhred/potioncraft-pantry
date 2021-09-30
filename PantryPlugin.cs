@@ -40,9 +40,15 @@ namespace RoboPhredDev.PotionCraft.Pantry
             // }
         }
 
+        public void OnGUI()
+        {
+            ParseErrorsGUI.OnGUI();
+        }
+
         private void LoadCustomIngredients()
         {
             var packages = PantryPackageLoader.LoadAllPackages();
+            ParseErrorsGUI.ShowIfErrors();
             Debug.Log($"Loaded {packages.Count} packages");
             foreach (var pkg in packages)
             {

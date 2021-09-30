@@ -26,7 +26,7 @@ namespace RoboPhredDev.PotionCraft.Pantry.PantryPackages
 
         public float GrindStartPercent { get; set; }
 
-        public string Path { get; set; }
+        public PantryIngredientPath Path { get; set; }
 
         public bool IsCrystal { get; set; }
 

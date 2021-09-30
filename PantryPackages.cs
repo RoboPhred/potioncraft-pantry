@@ -28,6 +28,7 @@ namespace RoboPhredDev.PotionCraft.Pantry
             catch (YamlFileException ex)
             {
                 UnityEngine.Debug.Log($"[Pantry] Failed to load package \"{ex.FilePath}\": {ex.Message}");
+                ParseErrorsGUI.ParseErrors.Add(ex);
                 return null;
             }
         }

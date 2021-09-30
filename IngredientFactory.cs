@@ -70,7 +70,7 @@ namespace RoboPhredDev.PotionCraft.Pantry
 
             newIngredient.path = new IngredientPath
             {
-                path = PathParser.SvgPathToBezierCurves(pantryIngredient.Path),
+                path = pantryIngredient.Path,
                 grindedPathStartsFrom = pantryIngredient.GrindStartPercent,
             };
 
