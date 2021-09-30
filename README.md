@@ -2,6 +2,8 @@
 
 A mod for creating custom PotionCraft ingredients.
 
+_WARNING_: This mod is currently in a prototype phase. While it can add custom ingredients to the game, it cannot spawn them without using additional cheat mods. As such, it is not ready for casual use.
+
 ## Adding custom ingredients
 
 Custom ingredients are read in from the `PotionCraft/pantry` folder. This folder should contain other folders provided by other ingredient mods.
