@@ -52,7 +52,7 @@ namespace RoboPhredDev.PotionCraft.Pantry
 
             svgPath = svgPath.Substring(i);
 
-            if (token == "")
+            if (token.Length == 0)
             {
                 return null;
             }
@@ -65,7 +65,7 @@ namespace RoboPhredDev.PotionCraft.Pantry
             var token = GetToken(ref svgPath);
             if (!float.TryParse(token, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var result))
             {
-                throw new Exception("Failed to parse float token: " + token);
+                throw new Exception($"Failed to parse float token: \"{token}\"");
             }
             return result;
         }

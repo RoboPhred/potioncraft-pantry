@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using System.Linq;
 using ObjectBased.UIElements.Tooltip;
 using RoboPhredDev.PotionCraft.Pantry.PantryPackages;
 
@@ -9,6 +10,8 @@ namespace RoboPhredDev.PotionCraft.Pantry
     static class PantryIngredientRegistry
     {
         private static readonly Dictionary<Ingredient, PantryIngredient> ingredientLookup = new();
+
+        public static IEnumerable<Ingredient> RegisteredIngredients { get => ingredientLookup.Keys; }
 
         public static void Initialize()
         {
@@ -47,6 +50,11 @@ namespace RoboPhredDev.PotionCraft.Pantry
             Managers.Ingredient.ingredients.Add(ingredient);
             ingredientLookup.Add(ingredient, pantryIngredient);
             return ingredient;
+        }
+
+        public static Ingredient GetIngredientByName(string name)
+        {
+            return ingredientLookup.Keys.FirstOrDefault(x => x.name == name);
         }
     }
 }

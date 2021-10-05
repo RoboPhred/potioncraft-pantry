@@ -10,78 +10,74 @@ namespace RoboPhredDev.PotionCraft.Pantry
     {
         public static Ingredient Create(PantryIngredient pantryIngredient)
         {
+            var newIngredient = ScriptableObject.CreateInstance<Ingredient>();
+            Apply(pantryIngredient, newIngredient);
+            return newIngredient;
+        }
+
+        public static void Apply(PantryIngredient pantryIngredient, Ingredient ingredient)
+        {
             var ingredientBase = Managers.Ingredient.ingredients.FirstOrDefault(x => x.name == pantryIngredient.IngredientBase);
             if (ingredientBase == null)
             {
                 throw new System.Exception($"Unknown base ingredient {pantryIngredient.IngredientBase}");
             }
 
-            var newIngredient = ScriptableObject.CreateInstance<Ingredient>();
-
-            // TODO: Create our own name, and override the strings in GetTooltipContent
-            // FIXME: Prefix name with package folder to avoid collisions.
-            newIngredient.name = pantryIngredient.QualifiedName;
+            ingredient.name = pantryIngredient.QualifiedName;
 
             // Clone data from an existing ingredient to satisfy the game.
             if (!string.IsNullOrEmpty(pantryIngredient.InventoryImage))
             {
-                newIngredient.inventoryIconObject = SpriteLoader.LoadSpriteFromFile(System.IO.Path.Combine(pantryIngredient.Package.DirectoryPath, pantryIngredient.InventoryImage));
-
-                // TESTING
-                newIngredient.recipeMarkIcon = newIngredient.inventoryIconObject;
+                ingredient.inventoryIconObject = SpriteLoader.LoadSpriteFromFile(System.IO.Path.Combine(pantryIngredient.Package.DirectoryPath, pantryIngredient.InventoryImage));
             }
             else
             {
-                newIngredient.inventoryIconObject = ingredientBase.inventoryIconObject;
-                newIngredient.recipeMarkIcon = ingredientBase.recipeMarkIcon;
+                ingredient.inventoryIconObject = ingredientBase.inventoryIconObject;
             }
 
             if (!string.IsNullOrEmpty(pantryIngredient.RecipeImage))
             {
-                newIngredient.recipeMarkIcon = SpriteLoader.LoadSpriteFromFile(System.IO.Path.Combine(pantryIngredient.Package.DirectoryPath, pantryIngredient.RecipeImage));
+                ingredient.recipeMarkIcon = SpriteLoader.LoadSpriteFromFile(System.IO.Path.Combine(pantryIngredient.Package.DirectoryPath, pantryIngredient.RecipeImage));
             }
             else
             {
-                newIngredient.recipeMarkIcon = ingredientBase.recipeMarkIcon;
+                ingredient.recipeMarkIcon = ingredientBase.recipeMarkIcon;
             }
 
             // TODO: This seems to be for the small ingredients marker in the ingredients list of recipes,
             // but its not working.  These seem to be built up by the InventoryAtlas, maybe at runtime, so maybe we need to regenerate that?
-            newIngredient.smallIcon = newIngredient.inventoryIconObject;
+            ingredient.smallIcon = ingredient.inventoryIconObject;
 
-            newIngredient.itemStackPrefab = ingredientBase.itemStackPrefab;
-            newIngredient.grindedSubstance = ingredientBase.grindedSubstance;
-            newIngredient.grindedSubstanceColor = ingredientBase.grindedSubstanceColor;
+            ingredient.itemStackPrefab = ingredientBase.itemStackPrefab;
+            ingredient.grindedSubstance = ingredientBase.grindedSubstance;
+            ingredient.grindedSubstanceColor = ingredientBase.grindedSubstanceColor;
 
-            // TODO: Not working?  Ingredient always at max length, doesnt allow grinding.
-            newIngredient.grindStatusByLeafGrindingCurve = ingredientBase.grindStatusByLeafGrindingCurve;
-            newIngredient.grindedSubstanceMaxAmount = ingredientBase.grindedSubstanceMaxAmount;
-            newIngredient.physicalParticleType = ingredientBase.physicalParticleType;
-            newIngredient.substanceGrindingSettings = ingredientBase.substanceGrindingSettings;
-            newIngredient.effectMovement = ingredientBase.effectMovement;
-            newIngredient.effectCollision = ingredientBase.effectCollision;
-            newIngredient.effectPlantGathering = ingredientBase.effectPlantGathering;
-            newIngredient.viscosityDown = ingredientBase.viscosityDown;
-            newIngredient.viscosityUp = ingredientBase.viscosityUp;
-            newIngredient.isSolid = ingredientBase.isSolid;
-            newIngredient.spotPlantPrefab = ingredientBase.spotPlantPrefab;
+            ingredient.grindStatusByLeafGrindingCurve = ingredientBase.grindStatusByLeafGrindingCurve;
+            ingredient.grindedSubstanceMaxAmount = ingredientBase.grindedSubstanceMaxAmount;
+            ingredient.physicalParticleType = ingredientBase.physicalParticleType;
+            ingredient.substanceGrindingSettings = ingredientBase.substanceGrindingSettings;
+            ingredient.effectMovement = ingredientBase.effectMovement;
+            ingredient.effectCollision = ingredientBase.effectCollision;
+            ingredient.effectPlantGathering = ingredientBase.effectPlantGathering;
+            ingredient.viscosityDown = ingredientBase.viscosityDown;
+            ingredient.viscosityUp = ingredientBase.viscosityUp;
+            ingredient.isSolid = ingredientBase.isSolid;
+            ingredient.spotPlantPrefab = ingredientBase.spotPlantPrefab;
             // Disable spawning in garden
-            newIngredient.spotPlantSpawnTypes = new List<GrowingSpotType>();
+            ingredient.spotPlantSpawnTypes = new List<GrowingSpotType>();
 
-            newIngredient.path = new IngredientPath
+            ingredient.path = new IngredientPath
             {
                 path = pantryIngredient.Path,
                 grindedPathStartsFrom = pantryIngredient.GrindStartPercent,
             };
 
-            newIngredient.canBeDamaged = ingredientBase.canBeDamaged;
-            newIngredient.isTeleportationIngredient = pantryIngredient.IsCrystal;
-            newIngredient.soundPreset = ingredientBase.soundPreset;
+            ingredient.canBeDamaged = ingredientBase.canBeDamaged;
+            ingredient.isTeleportationIngredient = pantryIngredient.IsCrystal;
+            ingredient.soundPreset = ingredientBase.soundPreset;
 
             // FIXME: Shouldn't unity call this automatically?  Maybe the issue is we are spawning immediately after creating it.  Might need to wait a few game ticks
-            newIngredient.OnAwake();
-
-            return newIngredient;
+            ingredient.OnAwake();
         }
     }
 }

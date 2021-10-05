@@ -1,5 +1,7 @@
 
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 using YamlDotNet.Serialization;
 
 namespace RoboPhredDev.PotionCraft.Pantry.PantryPackages
@@ -17,10 +19,13 @@ namespace RoboPhredDev.PotionCraft.Pantry.PantryPackages
 
         private void Initialize()
         {
-            foreach (var ingredient in Ingredients)
-            {
-                ingredient.Package = this;
-            }
+            Ingredients.ForEach(x => x.Initialize(this));
+        }
+
+        public void Apply()
+        {
+            Debug.Log($"[Pantry] Applying {Ingredients.Count} ingredients in {Name}");
+            Ingredients.ForEach(x => x.Apply());
         }
 
         public static PantryPackage Load(string directoryPath)
