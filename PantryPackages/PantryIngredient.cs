@@ -33,6 +33,8 @@ namespace RoboPhredDev.PotionCraft.Pantry.PantryPackages
 
         public bool IsCrystal { get; set; }
 
+        public float Price { get; set; }
+
         public List<PantryIngredientSoldByTemplate> SoldBy { get; set; } = new List<PantryIngredientSoldByTemplate>();
 
         [YamlIgnore]

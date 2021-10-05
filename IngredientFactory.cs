@@ -44,6 +44,8 @@ namespace RoboPhredDev.PotionCraft.Pantry
                 ingredient.recipeMarkIcon = ingredientBase.recipeMarkIcon;
             }
 
+            Reflection.SetPrivateField(ingredient, "price", pantryIngredient.Price);
+
             // TODO: This seems to be for the small ingredients marker in the ingredients list of recipes,
             // but its not working.  These seem to be built up by the InventoryAtlas, maybe at runtime, so maybe we need to regenerate that?
             ingredient.smallIcon = ingredient.inventoryIconObject;
