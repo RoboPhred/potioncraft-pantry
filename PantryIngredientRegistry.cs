@@ -11,7 +11,8 @@ namespace RoboPhredDev.PotionCraft.Pantry
     {
         private static readonly Dictionary<Ingredient, PantryIngredient> ingredientLookup = new();
 
-        public static IEnumerable<Ingredient> RegisteredIngredients { get => ingredientLookup.Keys; }
+        public static IEnumerable<PantryIngredient> PantryIngredients { get => ingredientLookup.Values; }
+        public static IEnumerable<Ingredient> ResolvedIngredients { get => ingredientLookup.Keys; }
 
         public static void Initialize()
         {
@@ -30,18 +31,18 @@ namespace RoboPhredDev.PotionCraft.Pantry
                 };
             };
 
-            IngredientsAtlasGetSpriteNamePatch.OnGetSpriteName += (_, e) =>
-            {
-                if (e.InventoryItem is Ingredient ingredient)
-                {
-                    if (!ingredientLookup.TryGetValue(ingredient, out var pantryIngredient))
-                    {
-                        return;
-                    }
+            // IngredientsAtlasGetSpriteNamePatch.OnGetSpriteName += (_, e) =>
+            // {
+            //     if (e.InventoryItem is Ingredient ingredient)
+            //     {
+            //         if (!ingredientLookup.TryGetValue(ingredient, out var pantryIngredient))
+            //         {
+            //             return;
+            //         }
 
-                    e.Result = pantryIngredient.IngredientBase + " SmallIcon";
-                }
-            };
+            //         e.Result = pantryIngredient.IngredientBase + " SmallIcon";
+            //     }
+            // };
         }
 
         public static Ingredient RegisterIngredient(PantryIngredient pantryIngredient)

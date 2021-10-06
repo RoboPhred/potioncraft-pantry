@@ -31,6 +31,12 @@
     <Reference Include="UnityEngine.IMGUIModule" CopyToPublishDirectory="Never">
       <HintPath>.\externals\UnityEngine.IMGUIModule.dll</HintPath>
     </Reference>
+
+    <Reference Include="Unity.TextMeshPro" CopyToPublishDirectory="Never">
+      <HintPath>.\externals\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+
+    
     <Reference Include="Assembly-CSharp" CopyToPublishDirectory="Never">
       <HintPath>.\externals\Assembly-CSharp.dll</HintPath>
     </Reference>

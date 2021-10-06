@@ -31,7 +31,7 @@ namespace RoboPhredDev.PotionCraft.Pantry.PantryPackages
         public static PantryPackage Load(string directoryPath)
         {
             var pkg = Deserializer.Deserialize<PantryPackage>(System.IO.Path.Combine(directoryPath, "package.yml"));
-            pkg.Name = System.IO.Path.GetDirectoryName(directoryPath);
+            pkg.Name = System.IO.Path.GetFileName(directoryPath);
             pkg.DirectoryPath = directoryPath;
             pkg.Initialize();
             return pkg;
