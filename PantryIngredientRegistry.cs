@@ -45,6 +45,11 @@ namespace RoboPhredDev.PotionCraft.Pantry
             // };
         }
 
+        public static bool IsPantryIngredient(Ingredient ingredient)
+        {
+            return ingredientLookup.ContainsKey(ingredient);
+        }
+
         public static Ingredient RegisterIngredient(PantryIngredient pantryIngredient)
         {
             var ingredient = IngredientFactory.Create(pantryIngredient);

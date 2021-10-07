@@ -15,6 +15,11 @@ namespace RoboPhredDev.PotionCraft.Pantry
             CubicBezierCurve curve;
             while ((curve = PartToCurve(ref path, lastEnd)) != null)
             {
+                // Filter out any M 0,0 that might have gotten in from path editors.
+                if (curve.PFirst == curve.PLast && curve.PFirst == curve.P1 && curve.PFirst == curve.P2)
+                {
+                    continue;
+                }
                 lastEnd = curve.PLast;
                 curves.Add(curve);
             }

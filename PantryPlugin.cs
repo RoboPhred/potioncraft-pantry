@@ -28,27 +28,34 @@ namespace RoboPhredDev.PotionCraft.Pantry
             UnityEngine.Debug.Log($"[Pantry]: Loaded");
 
             PantryIngredientRegistry.Initialize();
+            InjectAtlases();
 
             this.ApplyPatches();
 
             // Delay ingredient load until the ingredients we base ours on have loaded.
             RecipeMapObjectAwakeEvent.OnRecipeMapObjectAwake += (sender, args) =>
             {
-                // AtlasExperiment();
                 LoadCustomIngredients();
             };
         }
 
-        void AtlasExperiment()
+        void InjectAtlases()
         {
             var old = Reflection.GetPrivateStaticField<TMP_Text, Func<int, string, TMP_SpriteAsset>>("OnSpriteAssetRequest");
-            Debug.Log($"Replacing OnSpriteAssetRequest.  Old value is {(old != null ? "null" : "not null")}");
+            var assetHashCode = TMP_TextUtilities.GetSimpleHashCode(PantryIngredientAtlas.AtlasName);
             TextMeshPro.OnSpriteAssetRequest += (hashCode, assetName) =>
             {
-                Debug.Log($"Getting TMP asset {assetName} ({hashCode})");
-                // TODO: Only inject when asking for PantryIngredientAtlas.AtlasName
-                // We will have to override the string concatenation in various places when ingredient atlas is being used, and force it to use our atlas name for pantry ingredients
-                return PantryIngredientAtlas.Atlas;
+                if (hashCode == assetHashCode)
+                {
+                    return PantryIngredientAtlas.Atlas;
+                }
+
+                if (old != null)
+                {
+                    return old(hashCode, assetName);
+                }
+
+                return null;
             };
         }
 
