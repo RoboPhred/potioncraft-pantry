@@ -32,11 +32,11 @@ namespace RoboPhredDev.PotionCraft.Pantry
 
             if (found)
             {
-                Debug.Log("[PotionCraft] Injected atlas replacement for PotionCraftPanel.");
+                Debug.Log("[Pantry] Injected atlas replacement for PotionCraftPanel.");
             }
             else
             {
-                Debug.Log("[PotionCraft] Failed to inject atlas replacement for PotionCraftPanel!");
+                Debug.Log("[Pantry] Failed to inject atlas replacement for PotionCraftPanel!");
             }
         }
 

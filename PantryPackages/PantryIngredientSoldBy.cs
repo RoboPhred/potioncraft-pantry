@@ -1,12 +1,14 @@
 
+using System.Collections.Generic;
+using RoboPhredDev.PotionCraft.Pantry.Yaml;
 using YamlDotNet.Serialization;
 
 namespace RoboPhredDev.PotionCraft.Pantry.PantryPackages
 {
-    class PantryIngredientSoldByTemplate
+    [DuckTypeCandidate(typeof(PantryIngredientSoldByClass))]
+    [DuckTypeCandidate(typeof(PantryIngredientSoldByTemplate))]
+    abstract class PantryIngredientSoldBy
     {
-        public string NpcTemplateName { get; set; }
-
         public int MinCount { get; set; }
         public int MaxCount { get; set; }
 
@@ -14,6 +16,8 @@ namespace RoboPhredDev.PotionCraft.Pantry.PantryPackages
 
         [YamlIgnore]
         public PantryIngredient Ingredient { get; set; }
+
+        protected abstract IEnumerable<string> GetNpcTemplates();
 
         public void Initialize(PantryIngredient ingredient)
         {
@@ -27,7 +31,10 @@ namespace RoboPhredDev.PotionCraft.Pantry.PantryPackages
 
         public void Apply(Ingredient ingredientItem)
         {
-            TradeDeliveryApplicator.SetDelivery(NpcTemplateName, ingredientItem, MinCount, MaxCount, ChanceToAppearPercent);
+            foreach (var name in GetNpcTemplates())
+            {
+                TradeDeliveryApplicator.SetDelivery(name, ingredientItem, MinCount, MaxCount, ChanceToAppearPercent);
+            }
         }
     }
 }

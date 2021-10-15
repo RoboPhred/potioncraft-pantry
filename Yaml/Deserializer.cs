@@ -6,7 +6,7 @@ using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace RoboPhredDev.PotionCraft.Pantry
+namespace RoboPhredDev.PotionCraft.Pantry.Yaml
 {
     /// <summary>
     /// Deserialization utilities for yaml files.
@@ -82,7 +82,7 @@ namespace RoboPhredDev.PotionCraft.Pantry
                 var deserializer = BuildDeserializer();
                 return deserializer.Deserialize(parser, type);
             }
-            catch (YamlException ex) when (!(ex is YamlFileException))
+            catch (YamlException ex) when (ex is not YamlFileException)
             {
                 UnityEngine.Debug.Log($"Error parsing file {CurrentFilePath}: {ex.Message}");
                 throw new YamlFileException(CurrentFilePath, ex.Start, ex.End, ex.Message, ex);
@@ -109,7 +109,7 @@ namespace RoboPhredDev.PotionCraft.Pantry
                 var parser = new MergingParser(new Parser(new StringReader(fileContents)));
                 return func(parser);
             }
-            catch (YamlException ex) when (!(ex is YamlFileException))
+            catch (YamlException ex) when (ex is not YamlFileException)
             {
                 UnityEngine.Debug.Log($"Error parsing file {CurrentFilePath}: {ex.Message}");
                 throw new YamlFileException(CurrentFilePath, ex.Start, ex.End, ex.Message, ex);
@@ -125,6 +125,8 @@ namespace RoboPhredDev.PotionCraft.Pantry
             return new DeserializerBuilder()
                     .WithNamingConvention(NamingConvention)
                     .WithTypeConverter(new PantryIngredientPathTypeConverter())
+                    .WithTypeConverter(new MaybeStringArrayTypeConverter())
+                    .WithNodeDeserializer(new DuckTypeDeserializer(), s => s.OnTop())
                     // .WithNodeTypeResolver(new ImportNodeTypeResolver(), s => s.OnTop())
                     // .WithNodeDeserializer(new ImportDeserializer(), s => s.OnTop())
                     // .WithNodeDeserializer(new DuckTypeDeserializer(), s => s.OnTop())

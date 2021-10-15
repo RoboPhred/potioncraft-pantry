@@ -2,7 +2,7 @@
 
 A mod for creating custom PotionCraft ingredients.
 
-_WARNING_: This mod is currently in a prototype phase. While it can add custom ingredients to the game, it cannot spawn them without using additional cheat mods. As such, it is not ready for casual use.
+This mod is intended to be used as a base for other mods that wish to add their own ingredients to the game.
 
 ## Adding custom ingredients
 
@@ -22,6 +22,11 @@ To make an ingredient mod, have your mod create a folder inside the `pantry` fol
 - `grindStartPercent`: The percentage along the path of where your normal path ends and the grindable portion of the path begins. Must be greater or equal to 0, and less than 1
 - `isCrystal`: If set to true, the ingredient will act as a crystal and move with the teleportation effect.
 - `path`: The SVG Path for the path the ingredient takes.
+- `soldBy`: A list of instructions indicating who should sell this ingredient
+- - `npcClass`: The npc type that sells this ingredient. Either: Herbalist, DwarfMiner, Mushroomer, or Alchemist.
+- - `chanceToAppearPercent`: The chance for this item to be stocked by the npc per visit. Value should be between 0 (never) and 1 (100%)
+- - `minCount`: If the item appears, the minimum number of the item to stock. The actual number will be randomly chosen between this and `maxCount`
+- - `maxCount`: If the item appears, the maximum number of the item to stock. The actual number will be randomly chosen between this and `minCount`
 
 ### Defining ingredient paths
 

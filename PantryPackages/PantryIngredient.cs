@@ -35,7 +35,7 @@ namespace RoboPhredDev.PotionCraft.Pantry.PantryPackages
 
         public float Price { get; set; }
 
-        public List<PantryIngredientSoldByTemplate> SoldBy { get; set; } = new List<PantryIngredientSoldByTemplate>();
+        public List<PantryIngredientSoldBy> SoldBy { get; set; } = new List<PantryIngredientSoldBy>();
 
         [YamlIgnore]
         public PantryPackage Package { get; set; }

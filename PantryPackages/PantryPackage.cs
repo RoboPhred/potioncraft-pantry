@@ -1,5 +1,4 @@
 
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using YamlDotNet.Serialization;
@@ -30,7 +29,7 @@ namespace RoboPhredDev.PotionCraft.Pantry.PantryPackages
 
         public static PantryPackage Load(string directoryPath)
         {
-            var pkg = Deserializer.Deserialize<PantryPackage>(System.IO.Path.Combine(directoryPath, "package.yml"));
+            var pkg = Yaml.Deserializer.Deserialize<PantryPackage>(System.IO.Path.Combine(directoryPath, "package.yml"));
             pkg.Name = System.IO.Path.GetFileName(directoryPath);
             pkg.DirectoryPath = directoryPath;
             pkg.Initialize();
