@@ -47,6 +47,7 @@ namespace RoboPhredDev.PotionCraft.Pantry
 
         public static void AddOrUpdateSprite(string spriteName, Texture2D texture)
         {
+            Debug.Log($"Adding sprite {spriteName}");
             atlasContent[spriteName] = texture;
             spriteAsset = null;
         }
@@ -58,11 +59,9 @@ namespace RoboPhredDev.PotionCraft.Pantry
 
             var texture = new Texture2D(0, 0, TextureFormat.ARGB32, false, false);
 
-            var ingredientTextures = (from ingredient in PantryIngredientRegistry.PantryIngredients
-                                      let iconTex = TextureLoader.LoadTexture(System.IO.Path.Combine(ingredient.Package.DirectoryPath, ingredient.RecipeImage))
-                                      select new { Name = ingredient.QualifiedName, Texture = iconTex }).ToArray();
+            var pairs = atlasContent.ToArray();
 
-            var rects = texture.PackTextures(ingredientTextures.Select(x => x.Texture).ToArray(), 0, 4096, false);
+            var rects = texture.PackTextures(pairs.Select(x => x.Value).ToArray(), 0, 4096, false);
 
             asset.spriteSheet = texture;
             ShaderUtilities.GetShaderPropertyIDs();
@@ -74,13 +73,12 @@ namespace RoboPhredDev.PotionCraft.Pantry
             var scaleW = (float)texture.width;
             var scaleH = (float)texture.height;
 
-            for (var i = 0; i < ingredientTextures.Length; i++)
+            for (var i = 0; i < pairs.Length; i++)
             {
                 var rect = rects[i];
-                var data = ingredientTextures[i];
+                var spriteName = pairs[i].Key;
 
                 var pixelRect = new Rect(rect.x * scaleW, rect.y * scaleH, rect.width * scaleW, rect.height * scaleH);
-                var spriteName = $"{data.Name} SmallIcon";
                 var sprite = new TMP_Sprite
                 {
                     id = i,
@@ -108,20 +106,14 @@ namespace RoboPhredDev.PotionCraft.Pantry
 
         private static void ResetAssets()
         {
-            Debug.Log("Getting instance");
             var instance = Reflection.GetPrivateStaticField<MaterialReferenceManager, MaterialReferenceManager>("s_Instance");
             if (instance == null)
             {
-                Debug.Log("> No instance");
                 return;
             }
-            Debug.Log("Clearing font material");
             Reflection.GetPrivateField<Dictionary<int, Material>>(instance, "m_FontMaterialReferenceLookup").Clear();
-            Debug.Log("Clearing font asset");
             Reflection.GetPrivateField<Dictionary<int, TMP_FontAsset>>(instance, "m_FontAssetReferenceLookup").Clear();
-            Debug.Log("Clearing sprite asset");
             Reflection.GetPrivateField<Dictionary<int, TMP_SpriteAsset>>(instance, "m_SpriteAssetReferenceLookup").Clear();
-            Debug.Log("Clearing color gradiant");
             Reflection.GetPrivateField<Dictionary<int, TMP_ColorGradient>>(instance, "m_ColorGradientReferenceLookup").Clear();
         }
     }
