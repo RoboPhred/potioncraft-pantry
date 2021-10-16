@@ -30,19 +30,6 @@ namespace RoboPhredDev.PotionCraft.Pantry
                     description1 = pantryIngredient.Description,
                 };
             };
-
-            // IngredientsAtlasGetSpriteNamePatch.OnGetSpriteName += (_, e) =>
-            // {
-            //     if (e.InventoryItem is Ingredient ingredient)
-            //     {
-            //         if (!ingredientLookup.TryGetValue(ingredient, out var pantryIngredient))
-            //         {
-            //             return;
-            //         }
-
-            //         e.Result = pantryIngredient.IngredientBase + " SmallIcon";
-            //     }
-            // };
         }
 
         public static bool IsPantryIngredient(Ingredient ingredient)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -7,17 +8,12 @@ namespace RoboPhredDev.PotionCraft.Pantry
 {
     static class PantryIngredientAtlas
     {
+        public const string AtlasName = "PantryIngredientAtlas";
+
+        private static readonly Dictionary<string, Texture2D> atlasContent = new();
         private static TMP_SpriteAsset spriteAsset;
 
-        public static string AtlasName
-        {
-            get
-            {
-                return "PantryIngredientAtlas";
-            }
-        }
-
-        public static TMP_SpriteAsset Atlas
+        private static TMP_SpriteAsset Atlas
         {
             get
             {
@@ -27,6 +23,32 @@ namespace RoboPhredDev.PotionCraft.Pantry
                 }
                 return spriteAsset;
             }
+        }
+
+        public static void Initialize()
+        {
+            var old = Reflection.GetPrivateStaticField<TMP_Text, Func<int, string, TMP_SpriteAsset>>("OnSpriteAssetRequest");
+            var assetHashCode = TMP_TextUtilities.GetSimpleHashCode(AtlasName);
+            TMP_Text.OnSpriteAssetRequest += (hashCode, assetName) =>
+            {
+                if (hashCode == assetHashCode)
+                {
+                    return Atlas;
+                }
+
+                if (old != null)
+                {
+                    return old(hashCode, assetName);
+                }
+
+                return null;
+            };
+        }
+
+        public static void AddOrUpdateSprite(string spriteName, Texture2D texture)
+        {
+            atlasContent[spriteName] = texture;
+            spriteAsset = null;
         }
 
         public static void RebuildAtlas()
@@ -74,19 +96,10 @@ namespace RoboPhredDev.PotionCraft.Pantry
                     scale = 1.5f,
                 };
 
-                Debug.Log($"Adding sprite {sprite.name} {sprite.hashCode} id {sprite.id}.  x={sprite.x} y={sprite.y} width={sprite.width} height={sprite.height}");
-
                 asset.spriteInfoList.Add(sprite);
             }
 
             asset.UpdateLookupTables();
-
-            foreach (var d in ingredientTextures)
-            {
-                var idx = asset.GetSpriteIndexFromName(d.Name + " SmallIcon");
-                var thing = asset.spriteCharacterTable[idx];
-                Debug.Log($">> {d.Name}: {idx}, {thing.name} {thing.unicode}");
-            }
 
             spriteAsset = asset;
 
