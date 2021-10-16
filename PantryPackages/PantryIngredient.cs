@@ -25,6 +25,8 @@ namespace RoboPhredDev.PotionCraft.Pantry.PantryPackages
 
         public string RecipeImage { get; set; }
 
+        public string IconImage { get; set; }
+
         public string IngredientBase { get; set; }
 
         public float GrindStartPercent { get; set; }

@@ -78,7 +78,7 @@ namespace RoboPhredDev.PotionCraft.Pantry
             ingredient.isTeleportationIngredient = pantryIngredient.IsCrystal;
             ingredient.soundPreset = ingredientBase.soundPreset;
 
-            PantryIngredientAtlas.AddOrUpdateSprite($"{pantryIngredient.QualifiedName} SmallIcon", TextureLoader.LoadTexture(System.IO.Path.Combine(pantryIngredient.Package.DirectoryPath, pantryIngredient.RecipeImage)));
+            PantryIngredientAtlas.AddOrUpdateSprite($"{pantryIngredient.QualifiedName} SmallIcon", TextureLoader.LoadTexture(System.IO.Path.Combine(pantryIngredient.Package.DirectoryPath, pantryIngredient.IconImage ?? pantryIngredient.RecipeImage ?? pantryIngredient.InventoryImage)));
 
             // FIXME: Shouldn't unity call this automatically?  Maybe the issue is we are spawning immediately after creating it.  Might need to wait a few game ticks
             ingredient.OnAwake();

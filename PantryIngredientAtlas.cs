@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.TextCore;
 
 namespace RoboPhredDev.PotionCraft.Pantry
 {
@@ -55,6 +56,7 @@ namespace RoboPhredDev.PotionCraft.Pantry
         public static void RebuildAtlas()
         {
             var asset = ScriptableObject.CreateInstance<TMP_SpriteAsset>();
+            asset.name = AtlasName;
             asset.spriteInfoList = new List<TMP_Sprite>();
 
             var texture = new Texture2D(0, 0, TextureFormat.ARGB32, false, false);
@@ -90,11 +92,39 @@ namespace RoboPhredDev.PotionCraft.Pantry
                     height = pixelRect.height,
                     xAdvance = pixelRect.width,
                     xOffset = 0,
-                    yOffset = pixelRect.height,
+                    yOffset = pixelRect.height * 0.66f,
                     scale = 1.5f,
                 };
 
                 asset.spriteInfoList.Add(sprite);
+            }
+
+            // This is almost exactly like asset.UpgradeSpriteAsset, except that function neglects TMP_SpriteCharacter.glyphIndex,
+            // breaking TexMeshPro's rendering of atlas sprites.
+            Reflection.SetPrivateField(asset, "m_Version", "1.1.0");
+            for (int index = 0; index < asset.spriteInfoList.Count; ++index)
+            {
+                var spriteInfo = asset.spriteInfoList[index];
+                var tmpSpriteGlyph = new TMP_SpriteGlyph
+                {
+                    index = (uint)index,
+                    sprite = spriteInfo.sprite,
+                    metrics = new GlyphMetrics(spriteInfo.width, spriteInfo.height, spriteInfo.xOffset, spriteInfo.yOffset, spriteInfo.xAdvance),
+                    glyphRect = new GlyphRect((int)spriteInfo.x, (int)spriteInfo.y, (int)spriteInfo.width, (int)spriteInfo.height),
+                    scale = 1f,
+                    atlasIndex = 0,
+                };
+                asset.spriteGlyphTable.Add(tmpSpriteGlyph);
+
+                var tmpSpriteCharacter = new TMP_SpriteCharacter
+                {
+                    glyph = tmpSpriteGlyph,
+                    glyphIndex = (uint)index,
+                    unicode = 65534U,
+                    name = spriteInfo.name,
+                    scale = spriteInfo.scale,
+                };
+                asset.spriteCharacterTable.Add(tmpSpriteCharacter);
             }
 
             asset.UpdateLookupTables();
