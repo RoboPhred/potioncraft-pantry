@@ -10,7 +10,7 @@ namespace RoboPhredDev.PotionCraft.Pantry
     {
         public static EventHandler<IngredientGetTooltipContentEventArgs> OnIngredientGetTooltipContent;
 
-        static bool Prefix(Ingredient __instance, ref TooltipContent __result, int itemCount, bool anyModifierHeld = false)
+        static bool Prefix(Ingredient __instance, ref TooltipContent __result)
         {
             var e = new IngredientGetTooltipContentEventArgs(__instance);
             OnIngredientGetTooltipContent?.Invoke(__instance, e);
