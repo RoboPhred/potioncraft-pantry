@@ -9,7 +9,11 @@ namespace RoboPhredDev.PotionCraft.Pantry
         public static Texture2D LoadTexture(string filePath)
         {
             var data = File.ReadAllBytes(filePath);
-            var tex = new Texture2D(0, 0);
+            var tex = new Texture2D(0, 0, TextureFormat.ARGB32, false)
+            {
+                filterMode = FilterMode.Bilinear,
+            };
+
             if (!tex.LoadImage(data))
             {
                 throw new Exception("Failed to load image from file: " + filePath);

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace RoboPhredDev.PotionCraft.Pantry
 {
 
-    [BepInPlugin("net.robophreddev.PotionCraft.Pantry", "Custom Ingredients", "0.4.0.0")]
+    [BepInPlugin("net.robophreddev.PotionCraft.Pantry", "Custom Ingredients", "0.5.1.0")]
     public class PantryPlugin : BaseUnityPlugin
     {
         public static string AssemblyDirectory
