@@ -37,11 +37,9 @@ All coordinates and commands must use their absolute coordinate form (upper case
 The path must start from 0,0 and must NOT include a move command at the start.
 Only the following commands are supported: `H` (horizontal line), `V` (vertical line), `L` (line), `C` (cubic bezier curve).
 
-## Using custom ingredients
+## Reloading ingredient files
 
-At the moment, custom ingredients are not added to any spawn lists, so the garden and traders will not use them.
-
-While eventually, this mod intends to support adding ingredients to merchants, for now a debug console should be used to spawn the ingredients.
+During development of ingredient configs, you can hit `F11` to reload all ingredient files.  This will not affect ingredients that have already been used, but any ingredients in the inventory should inherit the new settings.
 
 ## Development
 
